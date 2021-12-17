@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.Item;
 using Nekoyume.TableData;
 
@@ -21,12 +18,6 @@ namespace Nekoyume.Model.Quest
         {
             _count = data.Count;
             Grade = data.Grade;
-        }
-
-        public ItemEnhancementQuest(Dictionary serialized) : base(serialized)
-        {
-            Grade = (int)((Integer)serialized["grade"]).Value;
-            _count = (int)((Integer)serialized["count"]).Value;
         }
 
         public override QuestType QuestType => QuestType.Craft;
@@ -61,15 +52,5 @@ namespace Nekoyume.Model.Quest
         }
 
         protected override string TypeId => "itemEnhancementQuest";
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"grade"] = (Integer)Grade,
-                [(Text)"count"] = (Integer)_count,
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
-
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using Nekoyume.Action;
 
 namespace Nekoyume.Model.Mail
 {
@@ -9,17 +8,6 @@ namespace Nekoyume.Model.Mail
     {
         protected override string TypeId => "combinationMail";
         public override MailType MailType => MailType.Workshop;
-
-        public CombinationMail(CombinationConsumable5.ResultModel attachmentActionResult, long blockIndex, Guid id, long requiredBlockIndex)
-            : base(attachmentActionResult, blockIndex, id, requiredBlockIndex)
-        {
-
-        }
-
-        public CombinationMail(Bencodex.Types.Dictionary serialized)
-            : base(serialized)
-        {
-        }
 
         public override void Read(IMail mail)
         {

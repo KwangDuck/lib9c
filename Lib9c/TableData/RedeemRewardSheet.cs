@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.State;
 using static Nekoyume.TableData.TableExtensions;
 
@@ -25,38 +24,6 @@ namespace Nekoyume.TableData
                 {
                     ItemId = ParseInt(fields[2]);
                 }
-            }
-
-            public RewardInfo(Dictionary serialized)
-            {
-                if (serialized.TryGetValue((Text) "type", out var type))
-                {
-                    Type = type.ToEnum<RewardType>();
-                }
-
-                if (serialized.TryGetValue((Text) "quantity", out var quantity))
-                {
-                    Quantity = quantity.ToInteger();
-                }
-
-                if (serialized.TryGetValue((Text) "item_id", out var itemId))
-                {
-                    ItemId = itemId.ToInteger();
-                }
-            }
-
-            public IValue Serialize()
-            {
-                var dict = new Dictionary<IKey, IValue>
-                {
-                    [(Text) "type"] = ((int) Type).Serialize(),
-                    [(Text) "quantity"] = Quantity.Serialize(),
-                };
-                if (ItemId.HasValue)
-                {
-                    dict[(Text) "item_id"] = ItemId.Serialize();
-                }
-                return new Dictionary(dict);
             }
 
             protected bool Equals(RewardInfo other)

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.Item;
 using Nekoyume.TableData;
 
@@ -21,12 +20,6 @@ namespace Nekoyume.Model.Quest
         {
             ItemType = data.ItemType;
             ItemSubType = data.ItemSubType;
-        }
-
-        public CombinationQuest(Dictionary serialized) : base(serialized)
-        {
-            ItemType = (ItemType)(int)((Integer)serialized["itemType"]).Value;
-            ItemSubType = (ItemSubType)(int)((Integer)serialized["itemSubType"]).Value;
         }
 
         public override void Check()
@@ -56,15 +49,5 @@ namespace Nekoyume.Model.Quest
             _current += items.Count(i => i.ItemType == ItemType && i.ItemSubType == ItemSubType);
             Check();
         }
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"itemType"] = (Integer)(int)ItemType,
-                [(Text)"itemSubType"] = (Integer)(int)ItemSubType,
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
-
     }
 }

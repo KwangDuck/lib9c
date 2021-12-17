@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.Elemental;
 using Nekoyume.Model.State;
 using Nekoyume.TableData;
@@ -79,13 +78,5 @@ namespace Nekoyume.Model.Skill
             Chance = chance;
             Power = power;
         }
-
-        public IValue Serialize() =>
-            new Bencodex.Types.Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text) "skillRow"] = SkillRow.Serialize(),
-                [(Text) "power"] = Power.Serialize(),
-                [(Text) "chance"] = Chance.Serialize()
-            });
     }
 }

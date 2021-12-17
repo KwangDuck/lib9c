@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Quest
@@ -18,11 +15,6 @@ namespace Nekoyume.Model.Quest
             : base(data, reward)
         {
             ItemId = data.ItemId;
-        }
-
-        public CollectQuest(Dictionary serialized) : base(serialized)
-        {
-            ItemId = (int)((Integer)serialized["itemId"]).Value;
         }
 
         public override void Check()
@@ -52,13 +44,5 @@ namespace Nekoyume.Model.Quest
             itemMap.TryGetValue(ItemId, out _current);
             Check();
         }
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"itemId"] = (Integer)ItemId,
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
     }
 }

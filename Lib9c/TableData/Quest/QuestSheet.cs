@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Bencodex.Types;
 using Nekoyume.Model.State;
 using static Nekoyume.TableData.TableExtensions;
 
@@ -22,24 +21,6 @@ namespace Nekoyume.TableData
                 Id = ParseInt(fields[0]);
                 Goal = ParseInt(fields[1]);
                 QuestRewardId = ParseInt(fields[2]);
-            }
-
-            public IValue Serialize() =>
-                new Bencodex.Types.Dictionary(new Dictionary<IKey, IValue>
-                {
-                    [(Text) "Id"] = (Integer) Key,
-                    [(Text) "Goal"] = (Integer) Goal,
-                    [(Text) "QuestRewardId"] = (Integer) QuestRewardId,
-                });
-
-            public static Row Deserialize(Bencodex.Types.Dictionary serialized)
-            {
-                return new Row
-                {
-                    Id = (int) ((Integer)serialized["Id"]),
-                    Goal = (int) ((Integer)serialized["Goal"]),
-                    QuestRewardId = (int) ((Integer)serialized["QuestRewardId"]),
-                };
             }
         }
         

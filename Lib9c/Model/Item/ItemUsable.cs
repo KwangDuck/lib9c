@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using Bencodex.Types;
 using Nekoyume.Model.Skill;
 using Nekoyume.Model.Stat;
-using Nekoyume.Model.State;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Item
 {
     // todo: 소모품과 장비가 함께 쓰기에는 장비 위주의 모델이 된 느낌. 아이템 정리하면서 정리를 흐음..
     [Serializable]
-    public abstract class ItemUsable : ItemBase, INonFungibleItem
+    public abstract class ItemUsable : ItemBase
     {
         public Guid ItemId { get; }
         public Guid TradableId => ItemId;
@@ -63,46 +60,6 @@ namespace Nekoyume.Model.Item
             RequiredBlockIndex = requiredBlockIndex;
         }
 
-        protected ItemUsable(Dictionary serialized) : base(serialized)
-        {
-            StatsMap = new StatsMap();
-            Skills = new List<Model.Skill.Skill>();
-            BuffSkills = new List<BuffSkill>();
-            if (serialized.TryGetValue((Text) "itemId", out var itemId))
-            {
-                ItemId = itemId.ToGuid();
-            }
-            if (serialized.TryGetValue((Text) "statsMap", out var statsMap))
-            {
-                StatsMap.Deserialize((Dictionary) statsMap);
-            }
-            if (serialized.TryGetValue((Text) "skills", out var skills))
-            {
-                foreach (var value in (List) skills)
-                {
-                    var skill = (Dictionary) value;
-                    Skills.Add(SkillFactory.Deserialize(skill));
-                }
-            }
-            if (serialized.TryGetValue((Text) "buffSkills", out var buffSkills))
-            {
-                foreach (var value in (List) buffSkills)
-                {
-                    var buffSkill = (Dictionary) value;
-                    BuffSkills.Add((BuffSkill) SkillFactory.Deserialize(buffSkill));
-                }
-            }
-            if (serialized.TryGetValue((Text) "requiredBlockIndex", out var requiredBlockIndex))
-            {
-                RequiredBlockIndex = requiredBlockIndex.ToLong();
-            }
-        }
-
-        protected ItemUsable(SerializationInfo info, StreamingContext _)
-            : this((Dictionary) Codec.Decode((byte[]) info.GetValue("serialized", typeof(byte[]))))
-        {
-        }
-
         protected bool Equals(ItemUsable other)
         {
             return base.Equals(other) && Equals(ItemId, other.ItemId);
@@ -135,23 +92,5 @@ namespace Nekoyume.Model.Item
         {
             RequiredBlockIndex = blockIndex;
         }
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text) "itemId"] = ItemId.Serialize(),
-                [(Text) "statsMap"] = StatsMap.Serialize(),
-                [(Text) "skills"] = new List(Skills
-                    .OrderByDescending(i => i.Chance)
-                    .ThenByDescending(i => i.Power)
-                    .Select(s => s.Serialize())),
-                [(Text) "buffSkills"] = new List(BuffSkills
-                    .OrderByDescending(i => i.Chance)
-                    .ThenByDescending(i => i.Power)
-                    .Select(s => s.Serialize())),
-                [(Text) "requiredBlockIndex"] = RequiredBlockIndex.Serialize(),
-            }.Union((Dictionary) base.Serialize()));
-#pragma warning restore LAA1002
     }
 }

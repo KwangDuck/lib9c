@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.State;
 using static Nekoyume.TableData.TableExtensions;
-using static Lib9c.SerializeKeys;
 
 namespace Nekoyume.TableData
 {
@@ -48,18 +46,6 @@ namespace Nekoyume.TableData
             {
                 ItemId = itemId;
                 Quantity = quantity;
-            }
-
-            public RewardInfo(Dictionary dictionary)
-            {
-                ItemId = dictionary[IdKey].ToInteger();
-                Quantity = dictionary[QuantityKey].ToInteger();
-            }
-            public IValue Serialize()
-            {
-                return Dictionary.Empty
-                    .Add(IdKey, ItemId.Serialize())
-                    .Add(QuantityKey, Quantity.Serialize());
             }
         }
 

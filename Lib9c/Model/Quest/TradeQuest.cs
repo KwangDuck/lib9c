@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.EnumType;
 using Nekoyume.TableData;
 
@@ -18,11 +15,6 @@ namespace Nekoyume.Model.Quest
             : base(data, reward)
         {
             Type = data.Type;
-        }
-
-        public TradeQuest(Dictionary serialized) : base(serialized)
-        {
-            Type = (TradeType)(int)((Integer)serialized["type"]).Value;
         }
 
         public override void Check()
@@ -44,12 +36,5 @@ namespace Nekoyume.Model.Quest
             );
 
         protected override string TypeId => "tradeQuest";
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"type"] = (Integer)(int)Type,
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
     }
 }

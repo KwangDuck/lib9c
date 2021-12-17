@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using Bencodex.Types;
-using Nekoyume.Model.State;
 using Nekoyume.TableData;
-using static Lib9c.SerializeKeys;
 
 namespace Nekoyume.Model.Item
 {
     [Serializable]
-    public class Costume : ItemBase, INonFungibleItem, IEquippableItem
+    public class Costume : ItemBase, IEquippableItem
     {
         // FIXME: Whether the equipment is equipped or not has no asset value and must be removed from the state.
         public bool equipped = false;
@@ -43,47 +37,6 @@ namespace Nekoyume.Model.Item
             SpineResourcePath = data.SpineResourcePath;
             ItemId = itemId;
         }
-
-        public Costume(Dictionary serialized) : base(serialized)
-        {
-            if (serialized.TryGetValue((Text) "equipped", out var toEquipped))
-            {
-                equipped = toEquipped.ToBoolean();
-            }
-            if (serialized.TryGetValue((Text) "spine_resource_path", out var spineResourcePath))
-            {
-                SpineResourcePath = (Text) spineResourcePath;
-            }
-
-            ItemId = serialized[LegacyCostumeItemIdKey].ToGuid();
-
-            if (serialized.ContainsKey(RequiredBlockIndexKey))
-            {
-                RequiredBlockIndex = serialized[RequiredBlockIndexKey].ToLong();
-            }
-        }
-
-        protected Costume(SerializationInfo info, StreamingContext _)
-            : this((Dictionary) Codec.Decode((byte[]) info.GetValue("serialized", typeof(byte[]))))
-        {
-        }
-
-        public override IValue Serialize()
-        {
-#pragma warning disable LAA1002
-            var innerDictionary = new Dictionary<IKey, IValue>
-            {
-                [(Text) "equipped"] = equipped.Serialize(),
-                [(Text) "spine_resource_path"] = SpineResourcePath.Serialize(),
-                [(Text) LegacyCostumeItemIdKey] = ItemId.Serialize()
-            };
-            if (RequiredBlockIndex > 0)
-            {
-                innerDictionary.Add((Text) RequiredBlockIndexKey, RequiredBlockIndex.Serialize());
-            }
-            return new Dictionary(innerDictionary.Union((Dictionary) base.Serialize()));
-        }
-#pragma warning restore LAA1002
 
         protected bool Equals(Costume other)
         {

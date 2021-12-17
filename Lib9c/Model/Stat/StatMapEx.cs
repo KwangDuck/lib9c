@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.State;
 
 namespace Nekoyume.Model.Stat
@@ -38,11 +37,6 @@ namespace Nekoyume.Model.Stat
         {
         }
 
-        public StatMapEx(Dictionary serialized) : base(serialized)
-        {
-            AdditionalValue = serialized["additionalValue"].ToDecimal();
-        }
-
         protected bool Equals(StatMapEx other)
         {
             return base.Equals(other) && _additionalValue == other._additionalValue;
@@ -63,14 +57,5 @@ namespace Nekoyume.Model.Stat
                 return base.GetHashCode() * 397 ^ _additionalValue.GetHashCode();
             }
         }
-
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"additionalValue"] = (Text)AdditionalValue.Serialize(),
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
     }
 }

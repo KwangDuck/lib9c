@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.Item;
-using Nekoyume.Model.State;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Quest
@@ -18,12 +15,6 @@ namespace Nekoyume.Model.Quest
             : base(data, reward)
         {
             Grade = data.Grade;
-        }
-
-        public ItemGradeQuest(Dictionary serialized) : base(serialized)
-        {
-            Grade = serialized["grade"].ToInteger();
-            ItemIds = serialized["itemIds"].ToList(i => i.ToInteger());
         }
 
         public override QuestType QuestType => QuestType.Obtain;
@@ -60,15 +51,5 @@ namespace Nekoyume.Model.Quest
         }
 
         protected override string TypeId => "itemGradeQuest";
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"grade"] = Grade.Serialize(),
-                [(Text)"itemIds"] = new List(ItemIds.OrderBy(i => i).Select(i => i.Serialize())),
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
-
     }
 }

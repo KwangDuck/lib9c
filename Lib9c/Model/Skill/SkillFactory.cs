@@ -1,4 +1,3 @@
-using Bencodex.Types;
 using Nekoyume.Model.State;
 using Nekoyume.TableData;
 
@@ -35,12 +34,5 @@ namespace Nekoyume.Model.Skill
             throw new UnexpectedOperationException(
                 $"{skillRow.Id}, {skillRow.SkillType}, {skillRow.SkillTargetType}, {skillRow.SkillCategory}");
         }
-
-        public static Skill Deserialize(Dictionary serialized) =>
-            Get(
-                SkillSheet.Row.Deserialize((Dictionary) serialized["skillRow"]),
-                serialized["power"].ToInteger(),
-                serialized["chance"].ToInteger()
-            );
     }
 }

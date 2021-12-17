@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Libplanet.Action;
 using System.Collections;
 using System.Linq;
 using Nekoyume.Battle;
@@ -95,19 +94,19 @@ namespace Nekoyume.Model
             }
         }
 
-        public Skill.Skill Select(IRandom random)
+        public Skill.Skill Select(Random random)
         {
             return PostSelect(random, GetSelectableSkills());
         }
 
         [Obsolete("Use Select")]
-        public Skill.Skill SelectV1(IRandom random)
+        public Skill.Skill SelectV1(Random random)
         {
             return PostSelectV1(random, GetSelectableSkills());
         }
 
         [Obsolete("Use Select")]
-        public Skill.Skill SelectV2(IRandom random)
+        public Skill.Skill SelectV2(Random random)
         {
             return PostSelectV2(random, GetSelectableSkills());
         }
@@ -117,7 +116,7 @@ namespace Nekoyume.Model
             return _skills.Where(skill => !_skillsCooldown.ContainsKey(skill.SkillRow.Id));
         }
 
-        private Skill.Skill PostSelect(IRandom random, IEnumerable<Skill.Skill> skills)
+        private Skill.Skill PostSelect(Random random, IEnumerable<Skill.Skill> skills)
         {
             var skillList = skills.ToList();
             var defaultAttack = skillList.FirstOrDefault(x => x.SkillRow.Id == GameConfig.DefaultAttackId);
@@ -154,7 +153,7 @@ namespace Nekoyume.Model
         }
 
         [Obsolete("Use PostSelect")]
-        private Skill.Skill PostSelectV1(IRandom random, IEnumerable<Skill.Skill> skills)
+        private Skill.Skill PostSelectV1(Random random, IEnumerable<Skill.Skill> skills)
         {
             var selected = skills
                 .Select(skill => new {skill, chance = random.Next(0, 100)})
@@ -170,7 +169,7 @@ namespace Nekoyume.Model
         }
 
         [Obsolete("Use PostSelect")]
-        private Skill.Skill PostSelectV2(IRandom random, IEnumerable<Skill.Skill> skills)
+        private Skill.Skill PostSelectV2(Random random, IEnumerable<Skill.Skill> skills)
         {
             var selected = skills
                 .OrderBy(skill => skill.SkillRow.Id)

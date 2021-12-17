@@ -1,36 +1,19 @@
 using System;
 using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using Bencodex.Types;
-using Libplanet;
-using Nekoyume.Model.State;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Item
 {
     [Serializable]
-    public class Material : ItemBase, ISerializable, IFungibleItem
+    public class Material : ItemBase, ISerializable
     {
-        public HashDigest<SHA256> ItemId { get; }
+        public long ItemId { get; }
 
-        public HashDigest<SHA256> FungibleId => ItemId;
+        public long FungibleId => ItemId;
 
         public Material(MaterialItemSheet.Row data) : base(data)
         {
-            ItemId = data.ItemId;
-        }
-
-        public Material(Dictionary serialized) : base(serialized)
-        {
-            if (serialized.TryGetValue((Text) "item_id", out var itemId))
-            {
-                ItemId = itemId.ToItemId();
-            }
-        }
-
-        protected Material(SerializationInfo info, StreamingContext _)
-            : this((Dictionary) Codec.Decode((byte[]) info.GetValue("serialized", typeof(byte[]))))
-        {
+            
         }
 
         protected bool Equals(Material other)
@@ -55,20 +38,6 @@ namespace Nekoyume.Model.Item
                 hashCode = (hashCode * 397) ^ ItemId.GetHashCode();
                 return hashCode;
             }
-        }
-
-        public override IValue Serialize()
-        {
-            var result = ((Dictionary) base.Serialize())
-                .SetItem("item_id", ItemId.Serialize());
-
-            return result;
-        }
-
-        public override string ToString()
-        {
-            return base.ToString() +
-                   $", {nameof(ItemId)}: {ItemId}";
         }
     }
 }

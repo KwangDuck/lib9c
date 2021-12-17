@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Libplanet.Action;
 using Nekoyume.Model;
 using Nekoyume.Model.BattleStatus;
 using Nekoyume.Model.Item;
@@ -33,7 +32,7 @@ namespace Nekoyume.Battle
         public override IEnumerable<ItemBase> Reward => _waveRewards;
 
         public StageSimulator(
-            IRandom random,
+            Random random,
             AvatarState avatarState,
             List<Guid> foods,
             int worldId,
@@ -113,7 +112,7 @@ namespace Nekoyume.Battle
         /// Do not use anymore since v100025.
         /// </summary>
         public StageSimulator(
-            IRandom random,
+            Random random,
             AvatarState avatarState,
             List<Guid> foods,
             int worldId,
@@ -155,46 +154,11 @@ namespace Nekoyume.Battle
             );
         }
 
-        public StageSimulator(
-            IRandom random,
-            AvatarState avatarState,
-            List<Guid> foods,
-            int worldId,
-            int stageId,
-            StageSimulatorSheets stageSimulatorSheets,
-            Model.Skill.Skill skill,
-            int constructorVersion,
-            int playCount
-        )
-            : this(
-                random,
-                avatarState,
-                foods,
-                worldId,
-                stageId,
-                stageSimulatorSheets,
-                constructorVersion,
-                playCount
-            )
-        {
-            var stageSheet = stageSimulatorSheets.StageSheet;
-            if (!stageSheet.TryGetValue(StageId, out var stageRow))
-                throw new SheetRowNotFoundException(nameof(stageSheet), StageId);
-
-            Exp = StageRewardExpHelper.GetExp(avatarState.level, stageId);
-            TurnLimit = stageRow.TurnLimit;
-
-            if (!ReferenceEquals(skill, null))
-            {
-                Player.OverrideSkill(skill);
-            }
-        }
-
         /// <summary>
         /// Do not use anymore since v100025.
         /// </summary>
         public StageSimulator(
-            IRandom random,
+            Random random,
             AvatarState avatarState,
             List<Guid> foods,
             int worldId,
@@ -225,7 +189,7 @@ namespace Nekoyume.Battle
         }
 
         public StageSimulator(
-            IRandom random,
+            Random random,
             AvatarState avatarState,
             List<Guid> foods,
             int worldId,
@@ -253,7 +217,7 @@ namespace Nekoyume.Battle
         /// Do not use anymore since v100025.
         /// </summary>
         public StageSimulator(
-            IRandom random,
+            Random random,
             AvatarState avatarState,
             List<Guid> foods,
             int worldId,
@@ -515,7 +479,7 @@ namespace Nekoyume.Battle
                                 break;
                             case 2:
                             {
-                                ItemMap = Player.GetRewards2(_waveRewards);
+                                //ItemMap = Player.GetRewards2(_waveRewards);
                                 var dropBox = new DropBox(null, _waveRewards);
                                 Log.Add(dropBox);
                                 var getReward = new GetReward(null, _waveRewards);
@@ -688,7 +652,7 @@ namespace Nekoyume.Battle
                                 break;
                             case 2:
                             {
-                                ItemMap = Player.GetRewards2(_waveRewards);
+                                //ItemMap = Player.GetRewards2(_waveRewards);
                                 var dropBox = new DropBox(null, _waveRewards);
                                 Log.Add(dropBox);
                                 var getReward = new GetReward(null, _waveRewards);
@@ -818,7 +782,7 @@ namespace Nekoyume.Battle
                                 break;
                             case 2:
                             {
-                                ItemMap = Player.GetRewards2(_waveRewards);
+                                //ItemMap = Player.GetRewards2(_waveRewards);
                                 var dropBox = new DropBox(null, _waveRewards);
                                 Log.Add(dropBox);
                                 var getReward = new GetReward(null, _waveRewards);
@@ -1130,7 +1094,7 @@ namespace Nekoyume.Battle
             return wave;
         }
 
-        public static WeightedSelector<StageSheet.RewardData> SetItemSelector(StageSheet.Row stageRow, IRandom random)
+        public static WeightedSelector<StageSheet.RewardData> SetItemSelector(StageSheet.Row stageRow, Random random)
         {
             var itemSelector = new WeightedSelector<StageSheet.RewardData>(random);
             foreach (var r in stageRow.Rewards)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nekoyume.Action;
 using Nekoyume.Battle;
 using Nekoyume.Model.BattleStatus;
 using Nekoyume.Model.Item;
@@ -252,7 +251,7 @@ namespace Nekoyume.Model
                         ring = equipment as Ring;
                         break;
                     default:
-                        throw new RequiredBlockIndexException();
+                        throw new Exception();
                 }
             }
 
@@ -367,18 +366,6 @@ namespace Nekoyume.Model
             return map;
         }
 
-        [Obsolete("Use GetRewards")]
-        public CollectionMap GetRewards2(List<ItemBase> items)
-        {
-            var map = new CollectionMap();
-            foreach (var item in items)
-            {
-                map.Add(Inventory.AddItem2(item));
-            }
-
-            return map;
-        }
-
         public virtual void Spawn()
         {
             InitAI();
@@ -421,8 +408,6 @@ namespace Nekoyume.Model
                 {
                     BuffSkills.Add(buffSkill);
                 }
-
-                Inventory.RemoveNonFungibleItem(food);
             }
         }
 

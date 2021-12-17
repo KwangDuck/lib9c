@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Bencodex.Types;
 
 namespace Nekoyume.Model.Stat
 {
@@ -56,14 +55,5 @@ namespace Nekoyume.Model.Stat
         {
             return (int) obj;
         }
-    }
-
-    public static class StatTypeExtension
-    {
-        public static IKey Serialize(this StatType statType) =>
-            new Binary(BitConverter.GetBytes((int) statType));
-
-        public static StatType Deserialize(Binary serialized) =>
-            (StatType) BitConverter.ToInt32(serialized.ToByteArray(), 0);
     }
 }

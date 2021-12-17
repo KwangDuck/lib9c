@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.Item;
 using Nekoyume.Model.Stat;
 using Nekoyume.Model.State;
@@ -18,14 +16,6 @@ namespace Nekoyume.TableData
             public override ItemType ItemType => ItemType.Consumable;
             public List<StatMap> Stats { get; private set; }
             
-            public Row() {}
-
-            public Row(Bencodex.Types.Dictionary serialized) : base(serialized)
-            {
-                Stats = ((Bencodex.Types.List) serialized["stats"]).Select(value =>
-                    new StatMap((Bencodex.Types.Dictionary) value)).ToList();
-            }
-
             public override void Set(IReadOnlyList<string> fields)
             {
                 base.Set(fields);
@@ -40,19 +30,6 @@ namespace Nekoyume.TableData
                         (StatType) Enum.Parse(typeof(StatType), fields[4 + i * 2]),
                         ParseDecimal(fields[5 + i * 2])));
                 }
-            }
-
-            public override IValue Serialize() =>
-#pragma warning disable LAA1002
-                new Bencodex.Types.Dictionary(new Dictionary<IKey, IValue>
-                {
-                    [(Text) "stats"] = new Bencodex.Types.List(Stats.Select(stat => stat.Serialize())),
-                }.Union((Bencodex.Types.Dictionary) base.Serialize()));
-#pragma warning restore LAA1002
-
-            public new static Row Deserialize(Bencodex.Types.Dictionary serialized)
-            {
-                return new Row(serialized);
             }
         }
         

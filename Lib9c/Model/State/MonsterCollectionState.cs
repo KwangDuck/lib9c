@@ -2,29 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Bencodex.Types;
-using Libplanet;
-using Nekoyume.Action;
 using Nekoyume.TableData;
-using static Lib9c.SerializeKeys;
 
 namespace Nekoyume.Model.State
 {
     [Serializable]
     public class MonsterCollectionState: State
     {
-        // We need `round` to integrate previous states.
-        public static Address DeriveAddress(Address baseAddress, int round)
-        {
-            return baseAddress.Derive(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    DeriveFormat,
-                    round
-                )
-            );
-        }
-
         public const string DeriveFormat = "monster-collection-{0}";
         public const long RewardInterval = 50400;
         public const long LockUpInterval = 50400 * 4;
@@ -34,38 +18,6 @@ namespace Nekoyume.Model.State
         public long StartedBlockIndex { get; private set; }
         public long ReceivedBlockIndex { get; private set; }
         public long RewardLevel { get; private set; }
-
-        public MonsterCollectionState(Address address, int level, long blockIndex) : base(address)
-        {
-            Level = level;
-            StartedBlockIndex = blockIndex;
-        }
-
-        public MonsterCollectionState(Address address, int level, long blockIndex,
-            MonsterCollectionRewardSheet monsterCollectionRewardSheet) : base(address)
-        {
-            Level = level;
-            StartedBlockIndex = blockIndex;
-            ExpiredBlockIndex = blockIndex + LockUpInterval;
-            List<MonsterCollectionRewardSheet.RewardInfo> rewardInfos = monsterCollectionRewardSheet[level].Rewards;
-        }
-
-        public MonsterCollectionState(Dictionary serialized) : base(serialized)
-        {
-            Level = serialized[LevelKey].ToInteger();
-            StartedBlockIndex = serialized[StartedBlockIndexKey].ToLong();
-            ReceivedBlockIndex = serialized[ReceivedBlockIndexKey].ToLong();
-
-            if (serialized.ContainsKey(ExpiredBlockIndexKey))
-            {
-                ExpiredBlockIndex = serialized[ExpiredBlockIndexKey].ToLong();
-            }
-
-            if (serialized.ContainsKey(RewardLevelKey))
-            {
-                RewardLevel = serialized[RewardLevelKey].ToLong();
-            }
-        }
 
         public bool IsLocked(long blockIndex)
         {
@@ -116,18 +68,6 @@ namespace Nekoyume.Model.State
             {
                 return new List<MonsterCollectionRewardSheet.RewardInfo>();
             }
-        }
-
-        public override IValue Serialize()
-        {
-#pragma warning disable LAA1002
-            return new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text) LevelKey] = Level.Serialize(),
-                [(Text) StartedBlockIndexKey] = StartedBlockIndex.Serialize(),
-                [(Text) ReceivedBlockIndexKey] = ReceivedBlockIndex.Serialize(),
-            }.Union((Dictionary) base.SerializeV2()));
-#pragma warning restore LAA1002
         }
 
         protected bool Equals(MonsterCollectionState other)

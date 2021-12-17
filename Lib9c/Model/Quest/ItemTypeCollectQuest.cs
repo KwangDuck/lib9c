@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.Item;
-using Nekoyume.Model.State;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Quest
@@ -19,12 +16,6 @@ namespace Nekoyume.Model.Quest
             : base(data, reward)
         {
             ItemType = data.ItemType;
-        }
-
-        public ItemTypeCollectQuest(Dictionary serialized) : base(serialized)
-        {
-            ItemIds = serialized["itemIds"].ToList(i => i.ToInteger());
-            ItemType = serialized["itemType"].ToEnum<ItemType>();
         }
 
         public void Update(ItemBase item)
@@ -62,15 +53,5 @@ namespace Nekoyume.Model.Quest
             );
 
         protected override string TypeId => "itemTypeCollectQuest";
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"itemType"] = ItemType.Serialize(),
-                [(Text)"itemIds"] = new List(ItemIds.OrderBy(i => i).Select(i => i.Serialize())),
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
-
     }
 }

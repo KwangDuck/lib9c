@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Immutable;
-using System.Linq;
-using Bencodex.Types;
-using Nekoyume.Model.State;
 
 namespace Nekoyume.Model.Item
 {
@@ -16,15 +12,5 @@ namespace Nekoyume.Model.Item
         {
             OrderId = orderId;
         }
-
-        public OrderLock(List serialized)
-        {
-            OrderId = serialized[1].ToGuid();
-        }
-
-        public IValue Serialize() => new List(
-            Type.Serialize(),
-            OrderId.Serialize()
-        );
     }
 }

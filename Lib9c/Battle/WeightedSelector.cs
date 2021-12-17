@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Libplanet.Action;
-using Serilog;
 
 namespace Nekoyume.Battle
 {
@@ -20,12 +18,12 @@ namespace Nekoyume.Battle
             }
         }
 
-        private readonly IRandom _random;
+        private readonly Random _random;
         private readonly List<Item> _items;
 
         public int Count => _items.Count;
 
-        public WeightedSelector(IRandom random)
+        public WeightedSelector(Random random)
         {
             _random = random;
             _items = new List<Item>();
@@ -36,11 +34,7 @@ namespace Nekoyume.Battle
             if (weight > 0)
             {
                 _items.Add(new Item(item, weight));
-            }
-            else
-            {
-                Log.Warning($"weight must be greater than 0.");
-            }
+            }            
         }
 
         public IEnumerable<T> Select(int count)

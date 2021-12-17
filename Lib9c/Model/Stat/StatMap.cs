@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Bencodex.Types;
 using Nekoyume.Model.State;
 
 namespace Nekoyume.Model.Stat
@@ -33,14 +31,6 @@ namespace Nekoyume.Model.Stat
             Value = value;
         }
 
-        public StatMap(Dictionary serialized)
-            : this(
-                StatTypeExtension.Deserialize((Binary)serialized["statType"]),
-                serialized["value"].ToDecimal()
-            )
-        {
-        }
-
         protected bool Equals(StatMap other)
         {
             return _value == other._value && StatType == other.StatType;
@@ -61,12 +51,5 @@ namespace Nekoyume.Model.Stat
                 return _value.GetHashCode() * 397 ^ (int)StatType;
             }
         }
-
-        public virtual IValue Serialize() =>
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"statType"] = StatType.Serialize(),
-                [(Text)"value"] = Value.Serialize(),
-            });
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Bencodex.Types;
 using Nekoyume.Model.State;
 
 namespace Nekoyume.Model.Stat
@@ -146,29 +144,6 @@ namespace Nekoyume.Model.Stat
                 return;
 
             _statMaps.Remove(key);
-        }
-
-        public IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(
-                _statMaps.Select(kv =>
-                    new KeyValuePair<IKey, IValue>(
-                        kv.Key.Serialize(),
-                        kv.Value.Serialize()
-                    )
-                )
-            );
-#pragma warning restore LAA1002
-
-        public void Deserialize(Dictionary serialized)
-        {
-#pragma warning disable LAA1002
-            foreach (KeyValuePair<IKey, IValue> kv in serialized)
-#pragma warning restore LAA1002
-            {
-                _statMaps[StatTypeExtension.Deserialize((Binary)kv.Key)] =
-                    new StatMapEx((Dictionary)kv.Value);
-            }
         }
 
         public int GetStat(StatType statType, bool ignoreAdditional = false)

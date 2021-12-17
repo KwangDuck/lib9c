@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Bencodex.Types;
-using Libplanet.Action;
 using Nekoyume.Extensions;
 using Nekoyume.Model.Stat;
 using Nekoyume.Model.State;
 using Nekoyume.TableData;
-using static Lib9c.SerializeKeys;
 
 namespace Nekoyume.Model.Item
 {
@@ -39,72 +36,6 @@ namespace Nekoyume.Model.Item
             SpineResourcePath = data.SpineResourcePath;
         }
 
-        public Equipment(Dictionary serialized) : base(serialized)
-        {
-            if (serialized.TryGetValue((Text) LegacyEquippedKey, out var value))
-            {
-                equipped = value.ToBoolean();
-            }
-
-            if (serialized.TryGetValue((Text) LegacyLevelKey, out value))
-            {
-                try
-                {
-                    level = value.ToInteger();
-                }
-                catch (InvalidCastException)
-                {
-                    level = (int) ((Integer) value).Value;
-                }
-            }
-
-            if (serialized.TryGetValue((Text) LegacyStatKey, out value))
-            {
-                Stat = value.ToDecimalStat();
-            }
-
-            if (serialized.TryGetValue((Text) LegacySetIdKey, out value))
-            {
-                SetId = value.ToInteger();
-            }
-
-            if (serialized.TryGetValue((Text) LegacySpineResourcePathKey, out value))
-            {
-                SpineResourcePath = (Text) value;
-            }
-
-            if (serialized.TryGetValue((Text) OptionCountFromCombinationKey, out value))
-            {
-                optionCountFromCombination = value.ToInteger();
-            }
-        }
-
-        protected Equipment(SerializationInfo info, StreamingContext _)
-            : this((Dictionary) Codec.Decode((byte[]) info.GetValue("serialized", typeof(byte[]))))
-        {
-        }
-
-        public override IValue Serialize()
-        {
-#pragma warning disable LAA1002
-            var dict = new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text) LegacyEquippedKey] = equipped.Serialize(),
-                [(Text) LegacyLevelKey] = level.Serialize(),
-                [(Text) LegacyStatKey] = Stat.Serialize(),
-                [(Text) LegacySetIdKey] = SetId.Serialize(),
-                [(Text) LegacySpineResourcePathKey] = SpineResourcePath.Serialize(),
-            }.Union((Dictionary) base.Serialize()));
-
-            if (optionCountFromCombination > 0)
-            {
-                dict = dict.SetItem(OptionCountFromCombinationKey, optionCountFromCombination.Serialize());
-            }
-
-            return dict;
-#pragma warning restore LAA1002
-        }
-
         public void Equip()
         {
             equipped = true;
@@ -129,7 +60,7 @@ namespace Nekoyume.Model.Item
             }
         }
 
-        public void LevelUpV2(IRandom random, EnhancementCostSheetV2.Row row, bool isGreatSuccess)
+        public void LevelUpV2(Random random, EnhancementCostSheetV2.Row row, bool isGreatSuccess)
         {
             level++;
             var rand = isGreatSuccess ? row.BaseStatGrowthMax
@@ -185,7 +116,7 @@ namespace Nekoyume.Model.Item
             }
         }
 
-        private void UpdateOptionsV2(IRandom random, EnhancementCostSheetV2.Row row, bool isGreatSuccess)
+        private void UpdateOptionsV2(Random random, EnhancementCostSheetV2.Row row, bool isGreatSuccess)
         {
             foreach (var statMapEx in StatsMap.GetAdditionalStats())
             {

@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Bencodex.Types;
 
 namespace Nekoyume.Model.State
 {
     [Serializable]
-    public sealed class LazyState<TState, TEncoding> : IState, ISerializable
+    public sealed class LazyState<TState, TEncoding> : IState
         where TState : IState
-        where TEncoding : IValue
     {
         private TEncoding _serialized;
         private Func<TEncoding, TState> _loader;
@@ -23,11 +20,6 @@ namespace Nekoyume.Model.State
         {
             _serialized = serialized;
             _loader = loader;
-        }
-
-        private LazyState(SerializationInfo info, StreamingContext context)
-        {
-            _loaded = (TState)info.GetValue(nameof(State), typeof(TState));
         }
 
         public TState State
@@ -59,11 +51,6 @@ namespace Nekoyume.Model.State
             return true;
         }
 
-        public IValue Serialize() =>
-            GetStateOrSerializedEncoding(out TState loaded, out TEncoding serialized)
-                ? loaded.Serialize()
-                : serialized;
-
         public static TState LoadState(LazyState<TState, TEncoding> lazyState) =>
             lazyState.State;
 
@@ -71,10 +58,5 @@ namespace Nekoyume.Model.State
             KeyValuePair<T, LazyState<TState, TEncoding>> lazyPair
         ) =>
             new KeyValuePair<T, TState>(lazyPair.Key, lazyPair.Value.State);
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(nameof(State), State);
-        }
     }
 }

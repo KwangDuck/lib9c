@@ -1,5 +1,4 @@
 using System;
-using Bencodex.Types;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Quest
@@ -9,10 +8,6 @@ namespace Nekoyume.Model.Quest
     {
         public WorldQuest(WorldQuestSheet.Row data, QuestReward reward) 
             : base(data, reward)
-        {
-        }
-
-        public WorldQuest(Dictionary serialized) : base(serialized)
         {
         }
 

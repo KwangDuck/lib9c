@@ -1,6 +1,4 @@
 using System;
-using System.Globalization;
-using Bencodex.Types;
 
 namespace Nekoyume
 {
@@ -23,21 +21,6 @@ namespace Nekoyume
             MacOSBinaryUrl = macOSBinaryUrl;
             WindowsBinaryUrl = windowsBinaryUrl;
             Timestamp = timestamp;
-        }
-
-        public AppProtocolVersionExtra(Bencodex.Types.Dictionary dictionary)
-        {
-            MacOSBinaryUrl = (Text) dictionary[MacOSBinaryUrlKey];
-            WindowsBinaryUrl = (Text) dictionary[WindowsBinaryUrlKey];
-            Timestamp = DateTimeOffset.Parse((Text) dictionary[TimestampKey], CultureInfo.InvariantCulture);
-        }
-
-        public IValue Serialize()
-        {
-            return Bencodex.Types.Dictionary.Empty
-                .Add(MacOSBinaryUrlKey, MacOSBinaryUrl)
-                .Add(WindowsBinaryUrlKey, WindowsBinaryUrl)
-                .Add(TimestampKey, Timestamp.ToString("O", CultureInfo.InvariantCulture));;
         }
     }
 }

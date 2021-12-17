@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Bencodex.Types;
 using Nekoyume.TableData;
 
 namespace Nekoyume.Model.Quest
@@ -16,11 +15,6 @@ namespace Nekoyume.Model.Quest
             : base(data, reward)
         {
             MonsterId = data.MonsterId;
-        }
-
-        public MonsterQuest(Dictionary serialized) : base(serialized)
-        {
-            MonsterId = (int)((Integer)serialized["monsterId"]).Value;
         }
 
         public override QuestType QuestType => QuestType.Adventure;
@@ -52,13 +46,5 @@ namespace Nekoyume.Model.Quest
             monsterMap.TryGetValue(MonsterId, out _current);
             Check();
         }
-
-        public override IValue Serialize() =>
-#pragma warning disable LAA1002
-            new Dictionary(new Dictionary<IKey, IValue>
-            {
-                [(Text)"monsterId"] = (Integer)MonsterId,
-            }.Union((Dictionary)base.Serialize()));
-#pragma warning restore LAA1002
     }
 }

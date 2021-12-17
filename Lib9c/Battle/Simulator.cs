@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Libplanet.Action;
 using Nekoyume.Model;
 using Nekoyume.Model.BattleStatus;
 using Nekoyume.Model.Item;
@@ -13,7 +12,7 @@ namespace Nekoyume.Battle
 {
     public abstract class Simulator
     {
-        public readonly IRandom Random;
+        public readonly Random Random;
         public readonly BattleLog Log;
         public readonly Player Player;
         public BattleLog.Result Result { get; protected set; }
@@ -33,7 +32,7 @@ namespace Nekoyume.Battle
         public abstract IEnumerable<ItemBase> Reward { get; }
 
         protected Simulator(
-            IRandom random,
+            Random random,
             AvatarState avatarState,
             List<Guid> foods,
             SimulatorSheets simulatorSheets
@@ -56,7 +55,7 @@ namespace Nekoyume.Battle
         public static List<ItemBase> SetReward(
             WeightedSelector<StageSheet.RewardData> itemSelector,
             int maxCount,
-            IRandom random,
+            Random random,
             MaterialItemSheet materialItemSheet
         )
         {
@@ -97,7 +96,7 @@ namespace Nekoyume.Battle
         public static List<ItemBase> SetRewardV2(
             WeightedSelector<StageSheet.RewardData> itemSelector,
             int maxCount,
-            IRandom random,
+            Random random,
             MaterialItemSheet materialItemSheet
         )
         {

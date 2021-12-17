@@ -33,13 +33,4 @@
     <PackageReference Include="Secp256k1.Native" Version="0.1.20" />
     <PackageReference Include="CsvHelper" Version="15.0.5" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\.Libplanet\Libplanet\Libplanet.csproj" />
-    <ProjectReference Include="..\.Libplanet\Libplanet.Analyzers\Libplanet.Analyzers.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Analyzer</OutputItemType>
-      <!-- https://github.com/dotnet/roslyn/issues/18093#issuecomment-405702631 -->
-    </ProjectReference>
-  </ItemGroup>
 </Project>

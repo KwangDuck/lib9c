@@ -3,16 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-#if UNITY_EDITOR
 using System.Text;
-#endif
-using Bencodex.Types;
-using JetBrains.Annotations;
-using Nekoyume.Model.State;
-using Serilog;
-#if UNITY_EDITOR
-using Serilog;
-#endif
 
 namespace Nekoyume.TableData
 {
@@ -30,10 +21,8 @@ namespace Nekoyume.TableData
 
         public IReadOnlyList<TValue> OrderedList => _orderedList;
 
-        [CanBeNull]
         public TValue First { get; private set; }
 
-        [CanBeNull]
         public TValue Last { get; private set; }
 
         public ICollection<TKey> Keys => ((IDictionary<TKey, TValue>)_impl).Keys;
@@ -149,8 +138,6 @@ namespace Nekoyume.TableData
             {
                 throw new SheetRowNotFoundException(Name, key.ToString());
             }
-
-            Log.Debug("{sheetName}: Key - {value}", Name, key.ToString());
             return false;
         }
 
@@ -189,9 +176,7 @@ namespace Nekoyume.TableData
                 var sb = new StringBuilder();
                 sb.AppendLine(GetType().Name);
                 sb.AppendLine(row.Key.ToString());
-                sb.AppendLine(e.Message);
-                Log.Error(e, sb.ToString());
-
+                sb.AppendLine(e.Message);                
                 return false;
             }
 #endif
@@ -253,7 +238,5 @@ namespace Nekoyume.TableData
         {
             return _orderedList.GetEnumerator();
         }
-
-        public IValue Serialize() => _csv.Serialize();
     }
 }

@@ -1,16 +1,13 @@
 using System;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
-using Bencodex.Types;
-using Libplanet;
 using Nekoyume.Model.State;
 using Nekoyume.TableData;
-using static Lib9c.SerializeKeys;
 
 namespace Nekoyume.Model.Item
 {
     [Serializable]
-    public class TradableMaterial : Material, ITradableFungibleItem
+    public class TradableMaterial : Material
     {
         public Guid TradableId { get; }
 
@@ -30,26 +27,8 @@ namespace Nekoyume.Model.Item
 
         private long _requiredBlockIndex;
 
-        public static Guid DeriveTradableId(HashDigest<SHA256> fungibleId) =>
-            new Guid(HashDigest<MD5>.DeriveFrom(fungibleId.ToByteArray()).ToByteArray());
-
         public TradableMaterial(MaterialItemSheet.Row data) : base(data)
-        {
-            TradableId = DeriveTradableId(ItemId);
-        }
-
-        public TradableMaterial(Dictionary serialized) : base(serialized)
-        {
-            RequiredBlockIndex = serialized.ContainsKey(RequiredBlockIndexKey)
-                ? serialized[RequiredBlockIndexKey].ToLong()
-                : default;
-
-            TradableId = DeriveTradableId(ItemId);
-        }
-
-        protected TradableMaterial(SerializationInfo info, StreamingContext _)
-            : this((Dictionary) Codec.Decode((byte[]) info.GetValue("serialized", typeof(byte[]))))
-        {
+        {            
         }
 
         protected bool Equals(TradableMaterial other)
@@ -74,16 +53,6 @@ namespace Nekoyume.Model.Item
                 hashCode = (hashCode * 397) ^ TradableId.GetHashCode();
                 return hashCode;
             }
-        }
-
-        public override IValue Serialize() => ((Dictionary) base.Serialize())
-            .SetItem(RequiredBlockIndexKey, RequiredBlockIndex.Serialize());
-
-        public override string ToString()
-        {
-            return base.ToString() +
-                   $", {nameof(TradableId)}: {TradableId}" +
-                   $", {nameof(RequiredBlockIndex)}: {RequiredBlockIndex}";
         }
 
         public object Clone()
